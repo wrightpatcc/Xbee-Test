@@ -196,6 +196,13 @@ def between():
 	between1 = math.sqrt(((elat*100000)-((100000*vehicle.location.global_relative_frame.lat)))**2+((100000*elon)-((100000*vehicle.location.global_relative_frame.lon)))**2+(ealt-(vehicle.location.global_relative_frame.alt))**2)
 	return between1
 	
+	#Distance from home location	
+def homedist():
+	global homedist
+	home1 = 100
+	home1 = math.sqrt(((home_lat*100000)-((100000*vehicle.location.global_relative_frame.lat)))**2+((100000*home_lon)-((100000*vehicle.location.global_relative_frame.lon)))**2+(home_alt-(vehicle.location.global_relative_frame.alt))**2)
+	return home1
+	
 #Sends vehicle home
 def gotoHome(location):  ###Note: Groundspeed must be set via missionplanner
 	print "I'm coming home!"
@@ -567,8 +574,15 @@ def send_key(Name, arg1):
 def traveling():
 	while True:
 		global x, y, z, key, vel, accel, correction_x, correction_y, correction_z, trkx, trky
-		global elat, elon, ealt, submode, edist, between
+		global elat, elon, ealt, submode, edist, between, homedist
 		count = 1
+		home1 = homedist()
+		if home1 >= 800:
+			print "Vehicle is out of bounds"
+			time.sleep(1)
+			print "Vehicle is RTB"
+			submode = "landing"
+			break
 		a = float(x - vehicle.location.global_relative_frame.lat)
 		b = float(y - vehicle.location.global_relative_frame.lon)		
 		c = float(z - vehicle.location.global_relative_frame.alt)
@@ -654,10 +668,16 @@ def traveling():
 def intercept():
 	while True:
 		global x, y, z, key, vel, accel, correction_x, correction_y, correction_z, trkx, trky
-		global edist, elat, elon, ealt, submode, yaw, turn, between, climb, red, meh, loft
+		global edist, elat, elon, ealt, submode, yaw, turn, between, climb, red, meh, loft, homedist
 		climb = vehicle.location.global_frame.alt
 		meh = 3
-		
+		home1 = homedist()
+		if home1 >= 800:
+			print "Vehicle is out of bounds"
+			time.sleep(1)
+			print "Vehicle is RTB"
+			submode = "landing"
+			break
 		#print "gimme a key"
 		ser.write("Key Request\n")
 		
