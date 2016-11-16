@@ -1,9 +1,6 @@
 # Xbee-Test
 
 
-#Code to try and incorporate manual flight
-       
-
 ####################################################
 ##Commander's Challenge Program for Drone Automation
 ##Starts Drone
