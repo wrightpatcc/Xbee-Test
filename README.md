@@ -574,7 +574,7 @@ def traveling():
 		global elat, elon, ealt, submode, edist, between, homedist
 		count = 1
 		home1 = homedist()
-		if home1 >= 800:
+		if home1 >= 200:
 			print "Vehicle is out of bounds"
 			time.sleep(1)
 			print "Vehicle is RTB"
@@ -669,7 +669,7 @@ def intercept():
 		climb = vehicle.location.global_frame.alt
 		meh = 3
 		home1 = homedist()
-		if home1 >= 800:
+		if home1 >= 200:
 			print "Vehicle is out of bounds"
 			time.sleep(1)
 			print "Vehicle is RTB"
