@@ -71,12 +71,13 @@ pwm = GPIO.PWM(LEDPin, 50)
 ##Connect to XBee
 #ser = serial.Serial('com7', 9600, timeout = 0.5)
 #ser = serial.Serial('/dev/ttyUSB1', 9600, timeout = 0.5)
-#print "Connecting..."
+#vehicle = connect("/dev/ttyUSB0", wait_ready=True, baud = 57600) #Connected via RPi
+ser.write("Connecting...\n")
 
 #############################################
 ##########Connect through Cord###############
 
-#vehicle = connect("/dev/ttyUSB0", wait_ready=True, baud = 57600) #Connected via RPi
+
 
 vehicle = connect('com5', wait_ready=True, baud = 57600) 
 time.sleep(2)
@@ -100,10 +101,10 @@ def arm_and_takeoff(aTargetAltitude):
 			print "Basic pre-arm checks"
 			ser.write("Basic pre-arm checks\n")
 		####Don't try to arm until autopilot is ready
-			while not vehicle.is_armable:
-				print "Waiting for vehicle to initialise..."
-				ser.write("Waiting for vehicle to initialise\n")
-				time.sleep(1)
+			#while not vehicle.is_armable:
+				#print "Waiting for vehicle to initialise..."
+				#ser.write("Waiting for vehicle to initialise\n")
+				#time.sleep(1)
 
 		#######################Remove above "While" condition for real testing		
 				
@@ -141,17 +142,10 @@ def arm_and_takeoff(aTargetAltitude):
 			
 			[Name, x, y, z] = rec_full_data("WP")
 
-			ser.write("Latitude is: %s\n" % x)
-			ser.write("Longitude is: %s\n" % y)
-			ser.write("Altitude is: %s\n" % z)
-			ser.write("Type is: %s\n" % Name)
-
+			ser.write("Lat:%s, Lon:%s, Alt:%s\n" % (x, y,z))
 			[Name, elat, elon, ealt] = rec_full_data("EnemyWP")
-
-			ser.write("Enemy Latitude is: %s\n" % elat)
-			ser.write("Enemy Longitude is: %s\n" % elon)
-			ser.write("Enemy Altitude is: %s\n" % ealt)
-			ser.write("Type is: %s\n" % Name)
+			
+			ser.write("ELat:%s, ELon:%s, EAlt:%s\n" % (elat, elon, ealt))
 			
 
 #Needed only for conditionyaw action
@@ -373,55 +367,7 @@ def strafe():
 	b_lat = -math.cos(math.radians(vehicle.heading))
 	b_lon = -math.sin(math.radians(vehicle.heading))
 	
-#main function --- might not be relavent
-def killingjoke():
-	print "Holding Position"		
-#########################
-## Starts loop for recieving and flying to multiple coords
-	while True:
-		global x
-		global y	
-		global z
-		global key
-		global vel
-		global accel
-		global correction_x
-		global correction_y
-		global correction_z
-		global trkx
-		global trky
-		
-		
 
-	##Will ask user if a threat is identified; if not, will update coords and try again, otherwise will switch to manual	
-		print "Pilot Takeover"
-		time.sleep(5)
-		while True:
-			if not vehicle.mode == VehicleMode("GUIDED"):
-				start = time.time()
-				print "other mode"
-				if vehicle.mode == VehicleMode("GUIDED"):
-					end = time.time()
-					print "Pilot controlled A/C for %s" % (end-start)
-					break
-				
-				
-				
-		print "Do you want to land? Press(Y or N)"
-		key=msvcrt.getch()
-		
-		#uncomment for XBee
-		
-		#print "Do you see the threat Y/N"
-		#while True:
-			#[Name, key] = rec_char("Threat Seen Y/N?")
-			#break
-		#print "key is %s" % key
-		
-		if key == "Y" or key == "y":
-			break
-		else:
-			pass
 			
 #How to send data thru XBee
 def send_full_data(Name, arg1, arg2, arg3):
@@ -629,7 +575,7 @@ def traveling():
 			ser.write("Heading: %s\n" % vehicle.heading)
 			if Hdg - 5 <= vehicle.heading and Hdg + 5 >= vehicle.heading:
 				print "Lock-on"
-				ser.write("Lock-on")
+				ser.write("Lock-on\n")
 				break
 		
 		
@@ -640,24 +586,25 @@ def traveling():
 		
 		if abs(ealt - vehicle.location.global_relative_frame.alt) <= 1 and abs(between) < 100 and abs(distance) < 2: # Update the numbers for 
 			submode = "intercept"
+			ser.write("Switching to intercept\n")
 			break
 		
 		
-		elif: 
+		else: 
 			
 			[Name, x, y, z] = rec_full_data("WP%s" % count)
 
-			ser.write("Latitude is: %s\n" % x)
-			ser.write("Longitude is: %s\n" % y)
-			ser.write("Altitude is: %s\n" % z)
-			ser.write("Type is: %s\n" % Name)
+			#ser.write("Latitude is: %s\n" % x)
+			#ser.write("Longitude is: %s\n" % y)
+			#ser.write("Altitude is: %s\n" % z)
+			#ser.write("Type is: %s\n" % Name)
 
 			[Name, elat, elon, ealt] = rec_full_data("EnemyWP")
 
-			ser.write("Enemy Latitude is: %s\n" % elat)
-			ser.write("Enemy Longitude is: %s\n" % elon)
-			ser.write("Enemy Altitude is: %s\n" % ealt)
-			ser.write("Type is: %s\n" % Name)		
+			#ser.write("Enemy Latitude is: %s\n" % elat)
+			#ser.write("Enemy Longitude is: %s\n" % elon)
+			#ser.write("Enemy Altitude is: %s\n" % ealt)
+			#ser.write("Type is: %s\n" % Name)		
 			count = count + 1
 			if count >= 2:
 				count = 2
@@ -670,9 +617,9 @@ def intercept():
 		meh = 3
 		home1 = homedist()
 		if home1 >= 200:
-			print "Vehicle is out of bounds"
+			ser.write("Vehicle is out of bounds\n")
 			time.sleep(1)
-			print "Vehicle is RTB"
+			ser.write("Vehicle is RTB\n")
 			submode = "landing"
 			break
 		#print "gimme a key"
@@ -713,7 +660,7 @@ def intercept():
 		"""
 		if abs(ealt - vehicle.location.global_relative_frame.alt) > 1 and abs(between) > 30:
 			submode = "goto"
-			#ser.write("Acquired new target")
+			#ser.write("Acquired new target\n")
 			break
 		"""
 		
@@ -751,7 +698,7 @@ def intercept():
 			loft = climb - meh
 			#lift = lift - 3
 			print "going down"
-			ser.write("Decending")
+			ser.write("Decending\n")
 			newLoc = LocationGlobal (vehicle.location.global_frame.lat, vehicle.location.global_frame.lon , loft)
 			gotoGPS(newLoc)
 			while True:
@@ -765,7 +712,7 @@ def intercept():
 		elif key == "x":
 			loft = climb + meh
 			print "going up"
-			ser.write("Acending")
+			ser.write("Ascending\n")
 			newLoc = LocationGlobal (vehicle.location.global_frame.lat, vehicle.location.global_frame.lon, loft)
 			gotoGPS(newLoc)
 			while True:
@@ -893,53 +840,23 @@ def intercept():
 				break
 		print "Current Location: Lat:%s, Lon:%s, Alt:%s" % (vehicle.location.global_relative_frame.lat, vehicle.location.global_relative_frame.lon, vehicle.location.global_relative_frame.alt)
 		print vehicle.heading
+		ser.write("Current Location: Lat:%s, Lon:%s, Alt:%s\n" % (vehicle.location.global_relative_frame.lat, vehicle.location.global_relative_frame.lon, vehicle.location.global_relative_frame.alt))
 		
 		print "tgt is located at %s" % Hdg
 		ser.write("Tgt is located at %s\n" % Hdg)
 		ser.write("Vehicle heading is %s\n" % vehicle.heading)
 print " Current-Location: Lat:%s, Lon:%s, Alt: %s" % (vehicle.location.global_frame.lat, vehicle.location.global_frame.lon, vehicle.location.global_frame.alt)
+ser.write("Current Location: Lat:%s, Lon:%s, Alt:%s\n" % (vehicle.location.global_relative_frame.lat, vehicle.location.global_relative_frame.lon, vehicle.location.global_relative_frame.alt))
+
 #############################################
 #Get WP and enemy's WP
 
-
 [Name, x, y, z] = rec_full_data("WP")
 
-print "Latitude is: ", x
-print "Longitude is: ", y
-print "Altitude is: ", z
-print "Type is: ", Name
-
+ser.write("Lat:%s, Lon:%s, Alt:%s\n" % (x, y,z))
 [Name, elat, elon, ealt] = rec_full_data("EnemyWP")
 
-print "Enemy Latitude is: ", elat
-print "Enemy Longitude is: ", elon
-print "Enemy Altitude is: ", ealt
-print "Type is: ", Name
-
-
-"""
-x=vehicle.location.global_frame.lat
-print x
-y=vehicle.location.global_frame.lon
-print y
-z=10
-
-elat = -35.362339
-elon = 149.165204
-ealt = 10
-
-
-#values for SIM
-
-x = -36.363261
-y = 149.1652299
-z = 10
-
-elat = -35.363269
-elon = 149.1652292
-ealt = 15
-"""
-
+ser.write("ELat:%s, ELon:%s, EAlt:%s\n" % (elat, elon, ealt))
  
 ##############################
 ##Sets home point coordinates
@@ -950,9 +867,7 @@ int(home_lon)
 home_alt = 5
 
 
-##This is where the crazy happens
-#killingjoke()
-#time.sleep(3)	
+
 ##############################
 ## Transit code
 
