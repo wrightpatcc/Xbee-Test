@@ -13,13 +13,13 @@
 from __future__ import division
 import math
 import datetime
-import msvcrt
+
 import dronekit_sitl
 from pymavlink import mavutil
 from dronekit import connect, VehicleMode, LocationGlobalRelative, LocationGlobal, Command
 import time
 import serial
-#import RPi.GPIO as gpio
+import RPi.GPIO as gpio
 
 
 #####################################
@@ -48,13 +48,13 @@ TIMEOUT = 3
 find = None 
 
 #need to uncomment GPIO
-"""
+
 #GPIO Setup
 LEDPin = 7
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(LEDPin, GPIO.OUT)
-pwm = GPIO.PWM(LEDPin, 50)
-"""
+pwm = GPIO.PWM(LEDPin, 30)
+
 ##########################################
 ##########Boots Simulator#################
 
@@ -70,21 +70,17 @@ pwm = GPIO.PWM(LEDPin, 50)
 ##########Start up code for real test########
 ##Connect to XBee
 #ser = serial.Serial('com7', 9600, timeout = 0.5)
-#ser = serial.Serial('/dev/ttyUSB1', 9600, timeout = 0.5)
-#vehicle = connect("/dev/ttyUSB0", wait_ready=True, baud = 57600) #Connected via RPi
+ser = serial.Serial('/dev/ttyUSB1', 9600, timeout = 0.5)
+#Connected via RPi
+vehicle = connect("/dev/ttyUSB0", wait_ready=True, baud = 57600) 
 ser.write("Connecting...\n")
 
 #############################################
 ##########Connect through Cord###############
-
-
-
-vehicle = connect('com5', wait_ready=True, baud = 57600) 
+#vehicle = connect('com5', wait_ready=True, baud = 57600) 
 time.sleep(2)
-
-print "Autopilot Firmware version: %s" % vehicle.version
+#print "Autopilot Firmware version: %s" % vehicle.version
 ser.write("Autopilot Firmware version: %s\n" % vehicle.version)
-
 #############################################
 
 ## Functions 
@@ -96,18 +92,7 @@ def arm_and_takeoff(aTargetAltitude):
 	"""
 	while True:
 		if not x == None and not y == None and not z == None:
-		####################################################
-			
-			print "Basic pre-arm checks"
-			ser.write("Basic pre-arm checks\n")
-		####Don't try to arm until autopilot is ready
-			#while not vehicle.is_armable:
-				#print "Waiting for vehicle to initialise..."
-				#ser.write("Waiting for vehicle to initialise\n")
-				#time.sleep(1)
-
-		#######################Remove above "While" condition for real testing		
-				
+		####################################################				
 			print "Arming motors"
 			ser.write("Starting motors\n")
 			# Copter should arm in GUIDED mode
@@ -520,33 +505,30 @@ def traveling():
 		global elat, elon, ealt, submode, edist, between, homedist
 		count = 1
 		home1 = homedist()
-		if home1 >= 200:
-			print "Vehicle is out of bounds"
+		if home1 >= 1000:
+			ser.write("Vehicle is out of bounds\n")
 			time.sleep(1)
-			print "Vehicle is RTB"
+			ser.write("Vehicle is RTB\n")
 			submode = "landing"
 			break
 		a = float(x - vehicle.location.global_relative_frame.lat)
 		b = float(y - vehicle.location.global_relative_frame.lon)		
-		c = float(z - vehicle.location.global_relative_frame.alt)
+		c = float(z - vehicle.location.global_relative_frame.alt) + 2
 		int(a)
 		int(b)
 		int(c)
 		newLoc = LocationGlobal (vehicle.location.global_frame.lat + a, vehicle.location.global_frame.lon + b, vehicle.location.global_frame.alt + c)
 		gotoGPS(newLoc)		
 		
-		print " Current Location: Lat:%s, Lon:%s, Alt:%s" % (vehicle.location.global_relative_frame.lat, vehicle.location.global_relative_frame.lon, vehicle.location.global_relative_frame.alt)
-		print " Enroute to Lat:%s, Lon:%s, Alt:%s" % (x,y,z)
+		#print " Current Location: Lat:%s, Lon:%s, Alt:%s" % (vehicle.location.global_relative_frame.lat, vehicle.location.global_relative_frame.lon, vehicle.location.global_relative_frame.alt)
+		#print " Enroute to Lat:%s, Lon:%s, Alt:%s" % (x,y,z)
 		ser.write("Current Location: Lat:%s, Lon:%s, Alt:%s\n" % (vehicle.location.global_relative_frame.lat, vehicle.location.global_relative_frame.lon, vehicle.location.global_relative_frame.alt))
 		ser.write("Enroute to Lat:%s, Lon:%s, Alt:%s\n" % (x,y,z))
 		
-		#time.sleep(3)
-		#print " Check Current Alt:%s" % vehicle.location.global_relative_frame.alt
-		#print " Heading: {}".format(vehicle.heading)
 		dist1 = distance()
 		between1 = between()
-		print " Distance to Waypoint: %s" % dist1
-		print "Distance to Enemy: %s" % between1
+		#print " Distance to Waypoint: %s" % dist1
+		#print "Distance to Enemy: %s" % between1
 		ser.write("Distance to Waypoint: %s\n" % dist1)
 		ser.write("Distance to Enemy: %s\n" % between1)
 			
@@ -566,48 +548,29 @@ def traveling():
 			Hdg = math.degrees(Bearing)+360
 		else:
 			Hdg = math.degrees(Bearing)
-		#print Bearing
 		
 		conditionyaw(Hdg)
 		while True:
-			
 			print " Heading: ", vehicle.heading
 			ser.write("Heading: %s\n" % vehicle.heading)
 			if Hdg - 5 <= vehicle.heading and Hdg + 5 >= vehicle.heading:
 				print "Lock-on"
 				ser.write("Lock-on\n")
 				break
-		
-		
-		
+
 		#check if in the correct position
 		##############################################
 		#need to add the function to determine
 		
-		if abs(ealt - vehicle.location.global_relative_frame.alt) <= 1 and abs(between) < 100 and abs(distance) < 2: # Update the numbers for 
+		if abs(between) < 100 and abs(distance) < 2: # Update the numbers  is this necessary? abs(ealt - vehicle.location.global_relative_frame.alt) <= 1 
 			submode = "intercept"
 			ser.write("Switching to intercept\n")
 			break
-		
-		
 		else: 
-			
-			[Name, x, y, z] = rec_full_data("WP%s" % count)
-
-			#ser.write("Latitude is: %s\n" % x)
-			#ser.write("Longitude is: %s\n" % y)
-			#ser.write("Altitude is: %s\n" % z)
-			#ser.write("Type is: %s\n" % Name)
-
+			ser.write("Need new set of coords\n")
+			[Name, x, y, z] = rec_full_data("WP")
 			[Name, elat, elon, ealt] = rec_full_data("EnemyWP")
 
-			#ser.write("Enemy Latitude is: %s\n" % elat)
-			#ser.write("Enemy Longitude is: %s\n" % elon)
-			#ser.write("Enemy Altitude is: %s\n" % ealt)
-			#ser.write("Type is: %s\n" % Name)		
-			count = count + 1
-			if count >= 2:
-				count = 2
 		
 def intercept():
 	while True:
@@ -622,7 +585,7 @@ def intercept():
 			ser.write("Vehicle is RTB\n")
 			submode = "landing"
 			break
-		#print "gimme a key"
+		
 		ser.write("Key Request\n")
 		
 		
@@ -801,6 +764,7 @@ def intercept():
 					break
 		#n releases another net
 		elif key == "n":
+			#pwm.stop()
 			pwm.start(10)
 			time.sleep(10)
 			pwm.stop
@@ -812,7 +776,7 @@ def intercept():
 			break
 		#tracking(vel*trkx, vel*trky, 0, 1)
 		#print " Current Location: Lat:%s, Lon:%s, Alt:%s" % (vehicle.location.global_relative_frame.lat, vehicle.location.global_relative_frame.lon, vehicle.location.global_relative_frame.alt)
-		#ser.write("Current altitude is: %s\n" % vehicle.location.global_relative_frame.alt)
+		ser.write("Current Location: Lat:%s, Lon:%s, Alt:%s\n" % (vehicle.location.global_relative_frame.lat, vehicle.location.global_relative_frame.lon, vehicle.location.global_relative_frame.alt))
 		La = float(vehicle.location.global_relative_frame.lat)
 		la = float(vehicle.location.global_relative_frame.lon)
 		Lb = float(elat)
@@ -843,12 +807,17 @@ def intercept():
 		ser.write("Current Location: Lat:%s, Lon:%s, Alt:%s\n" % (vehicle.location.global_relative_frame.lat, vehicle.location.global_relative_frame.lon, vehicle.location.global_relative_frame.alt))
 		
 		print "tgt is located at %s" % Hdg
-		ser.write("Tgt is located at %s\n" % Hdg)
+		ser.write("Tgt heading is %s\n" % Hdg)
 		ser.write("Vehicle heading is %s\n" % vehicle.heading)
 print " Current-Location: Lat:%s, Lon:%s, Alt: %s" % (vehicle.location.global_frame.lat, vehicle.location.global_frame.lon, vehicle.location.global_frame.alt)
 ser.write("Current Location: Lat:%s, Lon:%s, Alt:%s\n" % (vehicle.location.global_relative_frame.lat, vehicle.location.global_relative_frame.lon, vehicle.location.global_relative_frame.alt))
 
-#############################################
+
+##########################
+
+#START OF MAIN CODE
+
+##########################
 #Get WP and enemy's WP
 
 [Name, x, y, z] = rec_full_data("WP")
@@ -866,14 +835,13 @@ home_lon = float(vehicle.location.global_frame.lon)
 int(home_lon)
 home_alt = 5
 
-
-
 ##############################
 ## Transit code
-
+#pwm.start(1)
+##############################################################################################
 print "Arming"
 ser.write("Arming\n")
-time.sleep(.5)
+
 ##arms drone and lifts drone
 arm_and_takeoff(5)
 time.sleep(.5)	
