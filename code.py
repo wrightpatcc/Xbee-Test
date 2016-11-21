@@ -690,13 +690,13 @@ def intercept():
 			#Get WP and enemy's WP
 			submode = "goto"
 			break
-		
+		"""
 		elif key == "t":
 			print "Is this a Real World Test? (Y/N)"
-			safe=msvcrt.getch()
+			#safe=msvcrt.getch()
 			if safe == "y":
 				print "set new tgt. (N,S,E,W)"
-				red=msvcrt.getch()
+				#red=msvcrt.getch()
 				print "red is %s" % red
 				if red == "n":
 					elat = 39.793893
@@ -751,7 +751,7 @@ def intercept():
 					elat = -35.363261
 					elon = 149.1652299
 					ealt = 10
-		
+		"""
 		elif key == "l":
 			strafe()
 			loft = climb + meh
