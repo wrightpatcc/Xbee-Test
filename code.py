@@ -661,7 +661,7 @@ def intercept():
 			loft = climb - meh
 			#lift = lift - 3
 			print "going down"
-			ser.write("Decending\n")
+			ser.write("Descending\n")
 			newLoc = LocationGlobal (vehicle.location.global_frame.lat, vehicle.location.global_frame.lon , loft)
 			gotoGPS(newLoc)
 			while True:
