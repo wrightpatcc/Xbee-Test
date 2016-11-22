@@ -765,6 +765,10 @@ def intercept():
 					
 		elif key == "k":
 			repeat = 0
+			#pwm.stop()
+			pwm.start(10)
+			time.sleep(10)
+			pwm.stop
 			while True:
 				loft = climb + meh
 				strafe()
