@@ -752,7 +752,7 @@ def intercept():
 					elon = 149.1652299
 					ealt = 10
 		"""
-		elif key == "l":
+		elif key == "t":
 			strafe()
 			loft = climb + meh
 			print "Engaging!"
@@ -762,6 +762,23 @@ def intercept():
 			while True:
 				if vehicle.location.global_frame.alt >= loft - 1: #Can remove the hard number if mission planner waypoint radius is changable
 					break
+					
+		elif key == "k":
+			repeat = 0
+			while True:
+				loft = climb + meh
+				strafe()
+				newLoc = LocationGlobal (vehicle.location.global_relative_frame.lat + (s_lat*.00005), vehicle.location.global_relative_frame.lon - (s_lon*.00005), loft)
+				gotoGPS(newLoc)
+				time.sleep(1.2)
+				strafe()
+				newLoc = LocationGlobal (vehicle.location.global_relative_frame.lat - (s_lat*.00005), vehicle.location.global_relative_frame.lon + (s_lon*.00005), loft)
+				gotoGPS(newLoc)
+				time.sleep(1.2)
+				repeat = repeat + 1
+				if repeat = 2:
+					break
+					
 		#n releases another net
 		elif key == "n":
 			#pwm.stop()
