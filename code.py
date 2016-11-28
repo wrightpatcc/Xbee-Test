@@ -579,7 +579,7 @@ def intercept():
 		climb = vehicle.location.global_frame.alt
 		meh = 3
 		home1 = homedist()
-		if home1 >= 200:
+		if home1 >= 1000:
 			ser.write("Vehicle is out of bounds\n")
 			time.sleep(1)
 			ser.write("Vehicle is RTB\n")
