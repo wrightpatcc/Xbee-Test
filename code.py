@@ -790,7 +790,7 @@ def intercept():
 			time.sleep(6)
 			pwm.stop
 			submode = "goto"
-			break
+			
 			
 		elif key == "/":
 			submode = "landing"
