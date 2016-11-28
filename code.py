@@ -53,7 +53,7 @@ find = None
 LEDPin = 7
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(LEDPin, GPIO.OUT)
-pwm = GPIO.PWM(LEDPin, 30)
+pwm = GPIO.PWM(LEDPin, 50)
 
 ##########################################
 ##########Boots Simulator#################
@@ -786,8 +786,8 @@ def intercept():
 		#n releases another net
 		elif key == "n":
 			#pwm.stop()
-			pwm.start(10)
-			time.sleep(10)
+			pwm.start(5)
+			time.sleep(6)
 			pwm.stop
 			submode = "goto"
 			break
