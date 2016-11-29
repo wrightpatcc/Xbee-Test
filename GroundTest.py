@@ -900,7 +900,7 @@ print "Arming"
 ser.write("Arming\n")
 
 ##arms drone and lifts drone
-arm_and_takeoff(5)
+arm_and_takeoff(.1)
 time.sleep(.5)	
 
 #program start
