@@ -19,7 +19,7 @@ from pymavlink import mavutil
 from dronekit import connect, VehicleMode, LocationGlobalRelative, LocationGlobal, Command
 import time
 import serial
-import RPi.GPIO as gpio
+import RPi.GPIO as GPIO
 
 
 #####################################
@@ -87,9 +87,9 @@ ser.write("Autopilot Firmware version: %s\n" % vehicle.version)
 
 #Arms and rises to given Altitude
 def arm_and_takeoff(aTargetAltitude):
-	"""
-	Arms vehicle and fly to aTargetAltitude.
-	"""
+	
+	#Arms vehicle and fly to aTargetAltitude.
+	
 	while True:
 		if not x == None and not y == None and not z == None:
 		####################################################				
@@ -215,9 +215,9 @@ def RTL(landingAlt):
 		
 #Attempt to control drone directly from visual imputs
 def tracking(velocity_x, velocity_y, velocity_z, duration):
-    """
-    Move vehicle in direction based on specified velocity vectors.
-    """
+    
+    #Move vehicle in direction based on specified velocity vectors.
+    
     msg = vehicle.message_factory.set_position_target_global_int_encode(
         0,       # time_boot_ms (not used)
         0, 0,    # target system, target component
@@ -239,105 +239,6 @@ def tracking(velocity_x, velocity_y, velocity_z, duration):
         time.sleep(1)
 
 #Setting for drone to fly based on heading 
-def track(heading):
-	global trkx
-	global trky
-	if vehicle.heading == 0:
-		trkx = -1
-		trky = 0
-	elif vehicle.heading < 15:
-		trkx = -1
-		trky = -.25
-	elif vehicle.heading>=15 and vehicle.heading<=30:
-		trkx = -1
-		trky = -.5
-	elif vehicle.heading>30 and vehicle.heading<37.5:
-		trkx = -1
-		trky = -.75
-	elif vehicle.heading>=37.5 and vehicle.heading<=52.5:
-		trkx = -1
-		trky = -1
-	elif vehicle.heading>52.5 and vehicle.heading<60:
-		trkx = -.75
-		trky = -1
-	elif vehicle.heading>=60 and vehicle.heading<=75:
-		trkx = -.5
-		trky = -1	
-	elif vehicle.heading>75 and vehicle.heading<90:
-		trkx = -.25
-		trky = -1
-	elif vehicle.heading == 90:
-		trkx = -0
-		trky = -1
-	elif vehicle.heading>90 and vehicle.heading < 105:
-		trkx = .25
-		trky = -1
-	elif vehicle.heading>=105 and vehicle.heading<=120:
-		trkx = .5
-		trky = -1
-	elif vehicle.heading>120 and vehicle.heading<127.5:
-		trkx = .75
-		trky = -1
-	elif vehicle.heading>=127.5 and vehicle.heading<=142.5:
-		trkx = 1
-		trky = -1
-	elif vehicle.heading>142.5 and vehicle.heading<150:
-		trkx = 1
-		trky = -.75
-	elif vehicle.heading>=150 and vehicle.heading<=165:
-		trkx = 1
-		trky = -.5	
-	elif vehicle.heading>165 and vehicle.heading<180:
-		trkx = 1
-		trky = -.25
-	elif vehicle.heading == 180:
-		trkx = 1
-		trky = 0
-	elif vehicle.heading>180 and vehicle.heading < 195:
-		trkx = 1
-		trky = .25
-	elif vehicle.heading>=195 and vehicle.heading<=210:
-		trkx = 1
-		trky = .5
-	elif vehicle.heading>210 and vehicle.heading<217.5:
-		trkx = 1
-		trky = .75
-	elif vehicle.heading>=217.5 and vehicle.heading<=232.5:
-		trkx = 1
-		trky = 1
-	elif vehicle.heading>232.5 and vehicle.heading<240:
-		trkx = .75
-		trky = 1
-	elif vehicle.heading>=240 and vehicle.heading<=255:
-		trkx = .5
-		trky = 1	
-	elif vehicle.heading>255 and vehicle.heading<270:
-		trkx = .25
-		trky = 1
-	elif vehicle.heading == 270:
-		trkx = 0
-		trky = 1
-	elif vehicle.heading > 270 and vehicle.heading< 285:
-		trkx = -.25
-		trky = 1
-	elif vehicle.heading>=285 and vehicle.heading<=300:
-		trkx = -.5
-		trky = 1
-	elif vehicle.heading>300 and vehicle.heading<307.5:
-		trkx = -.75
-		trky = 1
-	elif vehicle.heading>=307.5 and vehicle.heading<=322.5:
-		trkx = -1
-		trky = 1
-	elif vehicle.heading>322.5 and vehicle.heading<330:
-		trkx = -1
-		trky = .75
-	elif vehicle.heading>=330 and vehicle.heading<345:
-		trkx = -1
-		trky = .5	
-	elif vehicle.heading>345:
-		trkx = -1
-		trky = .25
 
 #Glide is the base code for shifting the drone left and right...further comments can be found where "keys" "A" and "D" are utilized 
 def strafe():
@@ -620,12 +521,12 @@ def intercept():
 		#tracking(vel*trkx, vel*trky,0,5)
 		
 		#not sure if we want drone to automatically go towards other enemy or make that a manual decision
-		"""
-		if abs(ealt - vehicle.location.global_relative_frame.alt) > 1 and abs(between) > 30:
-			submode = "goto"
+		
+		#if abs(ealt - vehicle.location.global_relative_frame.alt) > 1 and abs(between) > 30:
+			#submode = "goto"
 			#ser.write("Acquired new target\n")
-			break
-		"""
+			#break
+		
 		
 		
 		#if between > 5:
