@@ -879,6 +879,10 @@ y=vehicle.location.global_frame.lon
 #z=float(raw_input())
 z=.1
 #int(z)
+
+elat=vehicle.location.global_frame.lat+.00002
+elon=vehicle.location.global_frame.lon+.00002
+elat=vehicle.location.global_frame.alt
  
 ##############################
 ##Sets home point coordinates
