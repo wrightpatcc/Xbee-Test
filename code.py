@@ -636,24 +636,24 @@ def intercept():
 			#time = .5
 		if key == "a": 
 			strafe()
-			newLoc = LocationGlobal (vehicle.location.global_relative_frame.lat + (s_lat*.00005), vehicle.location.global_relative_frame.lon - (s_lon*.00005), vehicle.location.global_frame.alt)
+			newLoc = LocationGlobal (vehicle.location.global_relative_frame.lat + (s_lat*.00002), vehicle.location.global_relative_frame.lon - (s_lon*.00002), vehicle.location.global_frame.alt)
 			gotoGPS(newLoc)
 			
 			
 		elif key == "d":
 			strafe()
-			newLoc = LocationGlobal (vehicle.location.global_relative_frame.lat - (s_lat*.00005), vehicle.location.global_relative_frame.lon + (s_lon*.00005), vehicle.location.global_frame.alt)
+			newLoc = LocationGlobal (vehicle.location.global_relative_frame.lat - (s_lat*.00002), vehicle.location.global_relative_frame.lon + (s_lon*.00002), vehicle.location.global_frame.alt)
 			gotoGPS(newLoc)
 			
 		elif key == "w":
 			strafe()
-			newLoc = LocationGlobal (vehicle.location.global_relative_frame.lat + (f_lat*.00005), vehicle.location.global_relative_frame.lon + (f_lon*.00005), vehicle.location.global_frame.alt)
+			newLoc = LocationGlobal (vehicle.location.global_relative_frame.lat + (f_lat*.00002), vehicle.location.global_relative_frame.lon + (f_lon*.00002), vehicle.location.global_frame.alt)
 			gotoGPS(newLoc)
 			
 			
 		elif key == "s":
 			strafe()
-			newLoc = LocationGlobal (vehicle.location.global_relative_frame.lat + (b_lat*.00005), vehicle.location.global_relative_frame.lon + (b_lon*.00005), vehicle.location.global_frame.alt)
+			newLoc = LocationGlobal (vehicle.location.global_relative_frame.lat + (b_lat*.00002), vehicle.location.global_relative_frame.lon + (b_lon*.00002), vehicle.location.global_frame.alt)
 			gotoGPS(newLoc)
 			
 		#makes the drone fly down 1 m
@@ -690,68 +690,7 @@ def intercept():
 			#Get WP and enemy's WP
 			submode = "goto"
 			break
-		"""
-		elif key == "t":
-			print "Is this a Real World Test? (Y/N)"
-			#safe=msvcrt.getch()
-			if safe == "y":
-				print "set new tgt. (N,S,E,W)"
-				#red=msvcrt.getch()
-				print "red is %s" % red
-				if red == "n":
-					elat = 39.793893
-					elon = -84.17082
-					ealt = 10
-					
-				elif red == "s":
-					elat = 39.793723
-					elon = -84.171005
-					ealt = 10
-					
-				elif red == "e":
-					elat = 39.793708
-					elon = -84.170764
-					ealt = 10
-					
-				elif red == "w":	
-					elat = 39.793908
-					elon = -84.17106
-					ealt = 10
-					
-				elif red == "h":
-					elat = 39.793805
-					elon = -84.170903
-					elat = 10
-			
-			else:
-				print "set new tgt. (N,S,E,W)"
-				red=msvcrt.getch()
-				print "red is %s" % red
-				if red == "n":
-					elat = -35.362339
-					elon = 149.165204
-					ealt = 10
-					
-				elif red == "s":
-					elat = -35.364806
-					elon = 149.165244
-					ealt = 10
-					
-				elif red == "e":
-					elat = -35.36311
-					elon = 149.166904
-					ealt = 10
-					
-				elif red == "w":	
-					elat = -35.36315
-					elon = 149.163761
-					ealt = 10
-					
-				elif red == "h":	
-					elat = -35.363261
-					elon = 149.1652299
-					ealt = 10
-		"""
+		
 		elif key == "t":
 			strafe()
 			loft = climb + meh
