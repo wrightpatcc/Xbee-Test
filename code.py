@@ -463,7 +463,7 @@ def traveling():
 		##############################################
 		#need to add the function to determine
 		
-		if abs(between) < 100 and abs(distance) < 2: # Update the numbers  is this necessary? abs(ealt - vehicle.location.global_relative_frame.alt) <= 1 
+		if abs(between1) < 100 and abs(dist1) < 2: # Update the numbers  is this necessary? abs(ealt - vehicle.location.global_relative_frame.alt) <= 1 
 			submode = "intercept"
 			ser.write("Switching to intercept\n")
 			break
@@ -491,7 +491,7 @@ def intercept():
 		
 		
 		while True:
-			[Name, key] = rec_char("key")
+			[Name, key] = rec_key("key")
 			break
 		
 		print "climb: %s" % climb
@@ -620,7 +620,7 @@ def intercept():
 				gotoGPS(newLoc)
 				time.sleep(1.2)
 				repeat = repeat + 1
-				if repeat = 2:
+				if repeat == 2:
 					break
 					
 		#n releases another net
