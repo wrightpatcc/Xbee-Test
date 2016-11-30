@@ -412,6 +412,14 @@ def traveling():
 			ser.write("Vehicle is RTB\n")
 			submode = "landing"
 			break
+		
+		if vehicle.battery.level <= 15:
+			ser.write("Low Battery\n")
+			time.sleep(1)
+			ser.write("Vehicle is RTB\n")
+			submode = "landing"
+			break
+		
 		a = float(x - vehicle.location.global_relative_frame.lat)
 		b = float(y - vehicle.location.global_relative_frame.lon)		
 		c = float(z - vehicle.location.global_relative_frame.alt) + 2
@@ -482,6 +490,13 @@ def intercept():
 		home1 = homedist()
 		if home1 >= 1000:
 			ser.write("Vehicle is out of bounds\n")
+			time.sleep(1)
+			ser.write("Vehicle is RTB\n")
+			submode = "landing"
+			break
+			
+		if vehicle.battery.level <= 15:
+			ser.write("Low Battery\n")
 			time.sleep(1)
 			ser.write("Vehicle is RTB\n")
 			submode = "landing"
@@ -680,7 +695,16 @@ ser.write("Current Location: Lat:%s, Lon:%s, Alt:%s\n" % (vehicle.location.globa
 
 ##########################
 #Get WP and enemy's WP
-
+if vehicle.battery.level <= 15:
+	start=time.time()
+	while True:
+		end=time.time()
+		ser.write("Low Battery\n")
+		time.sleep(1.5)
+		if (end-start) > 10:
+			vehicle.close()	
+			ser.close()
+	
 [Name, x, y, z] = rec_full_data("WP")
 
 ser.write("Lat:%s, Lon:%s, Alt:%s\n" % (x, y,z))
