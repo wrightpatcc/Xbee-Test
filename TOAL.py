@@ -503,6 +503,8 @@ print " Current-Location: Lat:%s, Lon:%s, Alt: %s" % (vehicle.location.global_fr
 #############################################
 #Get WP and enemy's WP
 
+ser.write("Battery: %s\n") % vehicle.battery.level
+
 """
 [Name, x, y, z] = rec_full_data("WP")
 
