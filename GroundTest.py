@@ -239,105 +239,6 @@ def tracking(velocity_x, velocity_y, velocity_z, duration):
         time.sleep(1)
 
 #Setting for drone to fly based on heading 
-def track(heading):
-	global trkx
-	global trky
-	if vehicle.heading == 0:
-		trkx = -1
-		trky = 0
-	elif vehicle.heading < 15:
-		trkx = -1
-		trky = -.25
-	elif vehicle.heading>=15 and vehicle.heading<=30:
-		trkx = -1
-		trky = -.5
-	elif vehicle.heading>30 and vehicle.heading<37.5:
-		trkx = -1
-		trky = -.75
-	elif vehicle.heading>=37.5 and vehicle.heading<=52.5:
-		trkx = -1
-		trky = -1
-	elif vehicle.heading>52.5 and vehicle.heading<60:
-		trkx = -.75
-		trky = -1
-	elif vehicle.heading>=60 and vehicle.heading<=75:
-		trkx = -.5
-		trky = -1	
-	elif vehicle.heading>75 and vehicle.heading<90:
-		trkx = -.25
-		trky = -1
-	elif vehicle.heading == 90:
-		trkx = -0
-		trky = -1
-	elif vehicle.heading>90 and vehicle.heading < 105:
-		trkx = .25
-		trky = -1
-	elif vehicle.heading>=105 and vehicle.heading<=120:
-		trkx = .5
-		trky = -1
-	elif vehicle.heading>120 and vehicle.heading<127.5:
-		trkx = .75
-		trky = -1
-	elif vehicle.heading>=127.5 and vehicle.heading<=142.5:
-		trkx = 1
-		trky = -1
-	elif vehicle.heading>142.5 and vehicle.heading<150:
-		trkx = 1
-		trky = -.75
-	elif vehicle.heading>=150 and vehicle.heading<=165:
-		trkx = 1
-		trky = -.5	
-	elif vehicle.heading>165 and vehicle.heading<180:
-		trkx = 1
-		trky = -.25
-	elif vehicle.heading == 180:
-		trkx = 1
-		trky = 0
-	elif vehicle.heading>180 and vehicle.heading < 195:
-		trkx = 1
-		trky = .25
-	elif vehicle.heading>=195 and vehicle.heading<=210:
-		trkx = 1
-		trky = .5
-	elif vehicle.heading>210 and vehicle.heading<217.5:
-		trkx = 1
-		trky = .75
-	elif vehicle.heading>=217.5 and vehicle.heading<=232.5:
-		trkx = 1
-		trky = 1
-	elif vehicle.heading>232.5 and vehicle.heading<240:
-		trkx = .75
-		trky = 1
-	elif vehicle.heading>=240 and vehicle.heading<=255:
-		trkx = .5
-		trky = 1	
-	elif vehicle.heading>255 and vehicle.heading<270:
-		trkx = .25
-		trky = 1
-	elif vehicle.heading == 270:
-		trkx = 0
-		trky = 1
-	elif vehicle.heading > 270 and vehicle.heading< 285:
-		trkx = -.25
-		trky = 1
-	elif vehicle.heading>=285 and vehicle.heading<=300:
-		trkx = -.5
-		trky = 1
-	elif vehicle.heading>300 and vehicle.heading<307.5:
-		trkx = -.75
-		trky = 1
-	elif vehicle.heading>=307.5 and vehicle.heading<=322.5:
-		trkx = -1
-		trky = 1
-	elif vehicle.heading>322.5 and vehicle.heading<330:
-		trkx = -1
-		trky = .75
-	elif vehicle.heading>=330 and vehicle.heading<345:
-		trkx = -1
-		trky = .5	
-	elif vehicle.heading>345:
-		trkx = -1
-		trky = .25
 
 #Glide is the base code for shifting the drone left and right...further comments can be found where "keys" "A" and "D" are utilized 
 def strafe():
@@ -563,8 +464,8 @@ def traveling():
 		#check if in the correct position
 		##############################################
 		#need to add the function to determine
-		"""
-		if abs(between) < 100 and abs(distance) < 2: # Update the numbers  is this necessary? abs(ealt - vehicle.location.global_relative_frame.alt) <= 1 
+		
+		if abs(between1) < 100 and abs(dist1) < 2: # Update the numbers  is this necessary? abs(ealt - vehicle.location.global_relative_frame.alt) <= 1 
 			submode = "intercept"
 			ser.write("Switching to intercept\n")
 			break
@@ -572,7 +473,7 @@ def traveling():
 			ser.write("Need new set of coords\n")
 			[Name, x, y, z] = rec_full_data("WP")
 			[Name, elat, elon, ealt] = rec_full_data("EnemyWP")
-		"""
+		
 		submode = "intercept"
 		ser.write("Switching to intercept\n")
 		break
@@ -596,7 +497,7 @@ def intercept():
 		
 		
 		while True:
-			[Name, key] = rec_char("key")
+			[Name, key] = rec_key("key")
 			break
 		
 		print "climb: %s" % climb
@@ -627,7 +528,7 @@ def intercept():
 		
 		#not sure if we want drone to automatically go towards other enemy or make that a manual decision
 		"""
-		if abs(ealt - vehicle.location.global_relative_frame.alt) > 1 and abs(between) > 30:
+		if abs(ealt - vehicle.location.global_relative_frame.alt) > 1 and abs(between1) > 30:
 			submode = "goto"
 			#ser.write("Acquired new target\n")
 			break
@@ -796,7 +697,7 @@ def intercept():
 				gotoGPS(newLoc)
 				time.sleep(1.2)
 				repeat = repeat + 1
-				if repeat = 2:
+				if repeat == 2:
 					break
 			"""	
 				
